@@ -1,6 +1,6 @@
 from django.urls import path
 from notes import views
-from notes.views import NoteViewSet, UserViewSet, CommentViewSet
+from notes.views import NoteViewSet, UserViewSet, CommentViewSet, CourseViewSet
 
 
 note_list = NoteViewSet.as_view({
@@ -36,6 +36,17 @@ comment_detail = CommentViewSet.as_view({
     'delete': 'destroy',
 })
 
+course_list = CourseViewSet.as_view({
+    'get': 'list',
+    'post': 'create',
+})
+
+course_detail = CourseViewSet.as_view({
+    'get': 'retrieve',
+    'put': 'update',
+    'delete': 'destroy',
+})
+
 urlpatterns = [
     path('notes/', note_list, name='note-list'),
     path('notes/<int:pk>/', note_detail, name='note-detail'),
@@ -43,4 +54,6 @@ urlpatterns = [
     path('users/<int:pk>/', user_detail, name='user-detail'),
     path('comments/', comment_list, name='comment-list'),
     path('comments/<int:pk>', comment_detail, name='comment-detail'),
+    path('courses/', course_list, name='course-list'),
+    path('courses/<int:pk>', course_detail, name='course-detail'),
 ]

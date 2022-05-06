@@ -6,6 +6,8 @@ from rest_framework.parsers import JSONParser
 from rest_framework import viewsets
 from .models import Note, User, Comment
 from .serializers import NoteSerializer, UserSerializer, CommentSerializer
+from .models import Course
+from .serializers import CourseSerializer
 
 # Create your views here.
 # def note_list(request):
@@ -59,3 +61,7 @@ class UserViewSet(viewsets.ModelViewSet):
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
+
+class CourseViewSet(viewsets.ModelViewSet):
+    queryset = Course.objects.all()
+    serializer_class = CourseSerializer

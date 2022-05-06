@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import Note, User, Comment
+from .models import Note, User, Comment, Course
+from datetime import datetime, timedelta, date
 
 # class NoteSerializer(serializers.Serializer):
 #     id = serializers.IntegerField(read_only=True)
@@ -18,14 +19,38 @@ from .models import Note, User, Comment
 class NoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Note
-        fields = ['id', 'created_by', 'title', 'content']
+        fields = ['id', 'parent_course', 'created_by', 'title', 'content', 'comment_count']
+
+    comment_count = serializers.SerializerMethodField(
+        read_only = True
+    )
+
+    def get_comment_count(self, obj):
+        # return Comment.objects.filter(parent_note == obj.id).count()
+        return obj.comments.count()
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'nickname', 'email']
 
+class CourseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Course
+        fields = ['id', 'number', 'title', 'note_count']
+
+    note_count = serializers.SerializerMethodField(
+        read_only=True
+    )
+
+    def get_note_count(self, obj):
+        start_data = date.today() - timedelta(days=365)
+        filter_notes = obj.notes.filter(created__gte=start_data)
+        return filter_notes.count()
+
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = ['id', 'created_by', 'parent_note', 'content']
+
+
